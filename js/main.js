@@ -10,7 +10,7 @@ let h_2 = toothpickHalfHeight;
 
 let toothpickPositions = new Map([["verical", 0], ["horizontal", 1]])
 let startingCoords = {x: 500, y: 500};
-let usedCoords = new Map();
+let usedCoords = new Set();
 
 function nextToothpickPosition(position) {
   return position == "verical" ? "horizontal" : "verical";
@@ -102,20 +102,19 @@ function coordsToString(coords) {
 }
 
 function addUsedCoords(coords) {
-  usedCoords.set(coordsToString(coords), coords);
+  usedCoords.add(coordsToString(coords));
 }
 
 function isUsedCoords(coords) {
-  return !!usedCoords.get(coordsToString(coords));
+  return usedCoords.has(coordsToString(coords));
 }
 
 function isSqueezed(coords) {
-  let counter = 0;
-
-  if (isUsedCoords({x: coords.x + w, y: coords.y})) counter++;
-  if (isUsedCoords({x: coords.x - w, y: coords.y})) counter++;
-  if (isUsedCoords({x: coords.x, y: coords.y + w})) counter++;
-  if (isUsedCoords({x: coords.x, y: coords.y - w})) counter++;
+  let counter =
+    isUsedCoords({x: coords.x + w, y: coords.y}) +
+    isUsedCoords({x: coords.x - w, y: coords.y}) +
+    isUsedCoords({x: coords.x, y: coords.y + w}) +
+    isUsedCoords({x: coords.x, y: coords.y - w});
 
   return counter > 1;
 }
@@ -139,8 +138,6 @@ function createToothpichNeighbors(toothpick) {
 function render() {
   let canvas = document.getElementById('canvas');
 
-  if (!canvas.getContext) return;
-
   let context = canvas.getContext('2d');
 
   new_toothpicks.forEach((toothpick) => {
@@ -151,7 +148,7 @@ function render() {
 }
 
 function gen_new_toothpicks() {
-  toothpicks = toothpicks.concat(new_toothpicks);
+  // toothpicks = toothpicks.concat(new_toothpicks);
 
   let brand_new_toothpicks = []
   new_toothpicks.forEach(t => brand_new_toothpicks = brand_new_toothpicks.concat(createToothpichNeighbors(t)));
