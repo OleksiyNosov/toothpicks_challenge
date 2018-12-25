@@ -12,16 +12,16 @@ let toothpickPositions = new Map([["verical", 0], ["horizontal", 1]])
 let startingCoords = {x: 500, y: 500};
 let usedCoords = new Set();
 
-function nextToothpickPosition(position) {
-  return position == "verical" ? "horizontal" : "verical";
+function nextToothpickPosition(orientation) {
+  return orientation == "verical" ? "horizontal" : "verical";
 }
 
-function createToothpickUsedCoords(centerCoords, position) {
+function createToothpickUsedCoords(centerCoords, orientation) {
   let x = centerCoords.x;
   let y = centerCoords.y;
   let usedCoords = [];
 
-  if (toothpickPositions.get(position) == toothpickPositions.get("horizontal")) {
+  if (toothpickPositions.get(orientation) == toothpickPositions.get("horizontal")) {
     usedCoords = [
       centerCoords,
       {x: (x + w_2 - h_2), y: y},
@@ -38,12 +38,12 @@ function createToothpickUsedCoords(centerCoords, position) {
   return usedCoords;
 }
 
-function createRenderData(centerCoords, position) {
+function createRenderData(centerCoords, orientation) {
   let x = centerCoords.x;
   let y = centerCoords.y;
   let renderData = {}
 
-  if (toothpickPositions.get(position) == toothpickPositions.get("horizontal")) {
+  if (toothpickPositions.get(orientation) == toothpickPositions.get("horizontal")) {
     renderData = {
       x: (x - h_2),
       y: (y - w_2),
@@ -62,12 +62,12 @@ function createRenderData(centerCoords, position) {
   return renderData;
 }
 
-function createNeighborCoords(centerCoords, position) {
+function createNeighborCoords(centerCoords, orientation) {
   let x = centerCoords.x;
   let y = centerCoords.y;
   let coords = [];
 
-  if (toothpickPositions.get(position) == toothpickPositions.get("horizontal")) {
+  if (toothpickPositions.get(orientation) == toothpickPositions.get("horizontal")) {
     coords = [
       {x: (x + w_2 + h_2), y: y},
       {x: (x - w_2 - h_2), y: y}
@@ -82,13 +82,13 @@ function createNeighborCoords(centerCoords, position) {
   return coords;
 }
 
-function createToothpick(centerCoords, position) {
+function createToothpick(centerCoords, orientation) {
   toothpick = {
-    position:       position,
+    orientation:       orientation,
     centerCoords:   centerCoords,
-    usedCoords:     createToothpickUsedCoords(centerCoords, position),
-    neighborCoords: createNeighborCoords(centerCoords, position),
-    renderData:     createRenderData(centerCoords, position)
+    usedCoords:     createToothpickUsedCoords(centerCoords, orientation),
+    neighborCoords: createNeighborCoords(centerCoords, orientation),
+    renderData:     createRenderData(centerCoords, orientation)
   };
 
   addUsedCoords(centerCoords);
@@ -120,7 +120,7 @@ function isSqueezed(coords) {
 }
 
 function createToothpichNeighbors(toothpick) {
-  let toothpickPosition = nextToothpickPosition(toothpick.position);
+  let toothpickPosition = nextToothpickPosition(toothpick.orientation);
 
   let new_toothpicks = []
 
