@@ -1,4 +1,4 @@
-let toothpickWidth = 2;
+let toothpickWidth = 0.5;
 let toothpickHeight = toothpickWidth * 5;
 let w = toothpickWidth;
 let h = toothpickHeight;
@@ -15,30 +15,6 @@ let usedCoords = new Map();
 function nextToothpickPosition(position) {
   return position == "verical" ? "horizontal" : "verical";
 }
-
-function createToothpickCoords(centerCoords, position) {
-  let x = centerCoords.x;
-  let y = centerCoords.y;
-  let coords = [];
-
-  if (toothpickPositions.get(position) == toothpickPositions.get("horizontal")) {
-    coords = [
-      {x: (x - h_2), y: (y + w_2)},
-      {x: (x + h_2), y: (y + w_2)},
-      {x: (x - h_2), y: (y - w_2)},
-      {x: (x + h_2), y: (y - w_2)}
-    ];
-  } else {
-    coords = [
-      {x: (x - w_2), y: (y + h_2)},
-      {x: (x + w_2), y: (y + h_2)},
-      {x: (x - w_2), y: (y - h_2)},
-      {x: (x + w_2), y: (y - h_2)}
-    ];
-  }
-
-  return coords;
-};
 
 function createToothpickUsedCoords(centerCoords, position) {
   let x = centerCoords.x;
@@ -110,7 +86,6 @@ function createToothpick(centerCoords, position) {
   toothpick = {
     position:       position,
     centerCoords:   centerCoords,
-    coords:         createToothpickCoords(centerCoords, position),
     usedCoords:     createToothpickUsedCoords(centerCoords, position),
     neighborCoords: createNeighborCoords(centerCoords, position),
     renderData:     createRenderData(centerCoords, position)
@@ -168,7 +143,7 @@ function render() {
 
   let context = canvas.getContext('2d');
 
-  toothpicks.forEach((toothpick) => {
+  new_toothpicks.forEach((toothpick) => {
     data = toothpick.renderData;
 
     context.fillRect(data.x, data.y, data.width, data.height);
@@ -195,4 +170,4 @@ function main() {
   render();
 }
 
-setInterval(main, 400)
+setInterval(main, 200)
